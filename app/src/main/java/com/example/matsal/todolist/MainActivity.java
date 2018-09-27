@@ -74,14 +74,12 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 NoteLists listItem = (NoteLists) lv.getItemAtPosition(position);
                 Integer id1 = listItem.getId();
-                Toast.makeText(getApplicationContext(), ""+id1, Toast.LENGTH_LONG).show();
                 if ( lv.isItemChecked(position)){
                       view.setBackgroundColor(Color.LTGRAY);
                   }
                   else{
                       view.setBackgroundColor(Color.WHITE);
                   }
-//                lv.setItemChecked(position,true);
             }
         });
     }
@@ -96,18 +94,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info  = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Toast.makeText(getApplicationContext(), info.position, Toast.LENGTH_LONG).show();
         switch(item.getItemId()){
             case R.id.iDelete:
-//                old method - with delete fiels
-//                deleteNote(noteLists.get(info.position));
-//                noteLists.remove(info.position);
-//                aa.notifyDataSetChanged();
-                dbo.deleteNote(info.position);
-                noteLists.remove(info.position);
-                aa.notifyDataSetChanged();
-                Log.d("note","remove data: DBid - " + info.position +1+
-                        ", note - "+ noteLists.remove(info.position));
+                try{
+                    NoteLists listItem = (NoteLists) lv.getItemAtPosition(info.position);
+                    dbo.deleteNote(listItem.getId());
+                    noteLists.remove(info.position);
+                    getAllContent();
+                    Log.d("noteLog","\nremove note - id: " + listItem.getId()+
+                            ", note: "+ listItem + ", list view position: "+ info.position);
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
         }
         return super.onContextItemSelected(item);
     }
@@ -135,63 +133,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getAllContent() throws IOException {
-        noteLists.clear();
+        try {
+            noteLists.clear();
 
-//        old method with file
-//        try {
-//            File folder = new File(path);
-//            String[] file = folder.list(new FilenameFilter() {
-//                @Override
-//                public boolean accept(File dir, String name) {
-//                    return name.endsWith(".txt");
-//                }
-//            });
-//
-//            for (int i = 0; i < file.length; i++) {
-//                BufferedReader br = new BufferedReader(new FileReader(path + "/" + file[i]));
-//                String line = br.readLine();
-//                noteLists.add(line.toString() + file[i]);
-//                aa = new ArrayAdapter(this, android.R.layout.select_dialog_multichoice,  noteLists);
-//            }
-//            //predefiniowany layout z checkboxami//
-////            aa = new ArrayAdapter(this, android.R.layout.select_dialog_multichoice, (List) noteLists);
-//            lv.setAdapter(aa);
-//        }catch (Exception e){
-//            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
-//        }
-
-        Cursor cur = dbo.getAllData();
-        ArrayList<NoteLists> NoteLists = new ArrayList<>();
-        while (cur.moveToNext()) {
-            HashMap<Integer, String> hashMap = new HashMap<>();//create a hashmap to store the data in key value pair
-            hashMap.put(cur.getInt(0), cur.getString(1));
-            NoteLists.add(new NoteLists(cur.getString(1), cur.getInt(0)));
-            noteLists.add(hashMap);//add the hashmap into arrayList
-            Toast.makeText(getApplicationContext(), cur.getInt(0) +"-"+cur.getString(1), Toast.LENGTH_LONG).show();
-        }
-        aa = new ArrayAdapter(this, android.R.layout.select_dialog_multichoice, NoteLists);
-        lv.setAdapter(aa);
-    }
-
-//    old method to file
-    private void deleteNote(String note){
-        try{
-            File folder = new File(path);
-            String[] file = folder.list(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".txt");
-                }
-            });
-            for (int i = 0; i < file.length; i++) {
-                BufferedReader br = new BufferedReader(new FileReader(path + "/" + file[i]));
-                if(note.equals(br.readLine().toString())){
-                    File f = new File(path + "/" + file[i]);
-                    f.delete();
-                }
+            Cursor cur = dbo.getAllData();
+            ArrayList<NoteLists> NoteLists = new ArrayList<>();
+            while (cur.moveToNext()) {
+                HashMap<Integer, String> hashMap = new HashMap<>();//create a hashmap to store the data in key value pair
+                hashMap.put(cur.getInt(0), cur.getString(1));
+                NoteLists.add(new NoteLists(cur.getString(1), cur.getInt(0)));
+                noteLists.add(hashMap);//add the hashmap into arrayList
+                Log.d("noteLog", "\ncreate note view - id: " + cur.getInt(0) + ", note: " +
+                        cur.getString(1));
             }
+            aa = new ArrayAdapter(this, android.R.layout.select_dialog_multichoice, NoteLists);
+            lv.setAdapter(aa);
         }catch (Exception e){
-            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
@@ -234,5 +192,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.d("aktywność","onDestroy");
         super.onDestroy();
+    }
+
+    public void onClickDeleteSomeNotes(View view) {
+        System.out.println(view.getId());
+    }
+    public void getCheckedNotes(){
+        HashMap<Integer, String> hashMap = new HashMap<>();
+
     }
 }
