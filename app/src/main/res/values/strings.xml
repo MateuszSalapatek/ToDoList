@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Lista zadań</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_note">NoteActivity</string>
+    <string name="lCreateNote">Utwórz notatkę</string>
+    <string name="lSetDateNotification">ustaw datę i godzinę powiadomienia</string>
+    <string name="lNoteContent">treść notatki</string>
+    <string name="lAdd">Dodaj</string>
+    <string name="lPleaseCreateNote">Proszę zapisać notatkę</string>
+    <string name="lDeleteNote">usuń notatkę</string>
+</resources>

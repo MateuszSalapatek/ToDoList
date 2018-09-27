@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".NoteActivity"
+    tools:showIn="@layout/activity_note">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/side_margin">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/eTContentText"
+            android:hint="@string/lNoteContent"/>
+        <CheckBox
+            android:id="@+id/cBNotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lSetDateNotification"/>
+        <EditText
+            android:id="@+id/eTDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="podaj datę w formacie DD-MM-RRRR"
+            android:inputType="number" />
+        <EditText
+            android:id="@+id/eTTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="podaj godzinę w formacie HH24-MI-SS"
+            android:inputType="number"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:onClick="addNote"
+            android:layout_height="wrap_content"
+            android:text="@string/lAdd"/>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
