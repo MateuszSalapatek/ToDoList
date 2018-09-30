@@ -28,6 +28,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:textColor="@color/canvas"
         android:paddingHorizontal="10dp"
+        android:visibility="invisible"
         android:background="@color/colorAccent"
         android:text="Usuń wykonane" />
 

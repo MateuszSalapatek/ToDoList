@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -35,40 +36,8 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     public void addNote(View view) {
-        createDir();
-        createFile();
-        finish();
-    }
-
-    public void createDir() {
-        File path = new File(this.path);
-        if(!path.exists()){
-            try{
-                path.mkdir();
-            }
-            catch (Exception e){
-                Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    public void createFile(){
-        File file = new File(path + "/" + System.currentTimeMillis() + ".txt");
-        FileOutputStream fOut;
-        OutputStreamWriter myOutWriter;
         dbo.addNote(etNoteContent.getText().toString(),null);
-        try{
-            fOut = new FileOutputStream(file);
-            myOutWriter = new OutputStreamWriter(fOut);
-            myOutWriter.append(etNoteContent.getText().toString());
-            myOutWriter.close();
-            fOut.close();
-
-        }catch (NullPointerException e){
-            Toast.makeText(getApplicationContext(), R.string.lPleaseCreateNote, Toast.LENGTH_LONG).show();
-        }
-        catch (Exception e){
-            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
-        }
+        Log.d("noteLog", "\ncreate note view - text: " + etNoteContent.getText().toString());
+        finish();
     }
 }

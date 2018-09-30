@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url "http://jcenter.bintray.com" }
+    }
+}
 android {
     compileSdkVersion 27
     defaultConfig {

@@ -5,10 +5,18 @@ import java.util.Objects;
 public class NoteLists {
     private String content;
     private Integer id;
+    private Integer position;
 
+    public NoteLists(){
+
+    }
     public NoteLists(String content, Integer id) {
         this.content = content;
         this.id = id;
+    }
+    public NoteLists(Integer id, Integer position){
+        this.id = id;
+        this.position = position;
     }
 
     public String getContent() {
@@ -25,6 +33,14 @@ public class NoteLists {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     @Override
