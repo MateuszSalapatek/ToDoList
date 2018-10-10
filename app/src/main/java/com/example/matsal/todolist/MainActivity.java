@@ -1,11 +1,11 @@
 package com.example.matsal.todolist;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.health.SystemHealthManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,13 +15,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<HashMap<Integer,String>> noteLists=new ArrayList<>();
     private ListView lv;
     private ArrayAdapter aa;
-    private Button bDeleteAll;
+    private Button bDeleteAll, bCreateNote;
     DataBaseOwner dbo = new DataBaseOwner(this);
 
     @Override
@@ -42,17 +43,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, NoteActivity.class);
-                startActivity(intent);
-            }
-        });
 
         lv = findViewById(R.id.lVToDoList);
         bDeleteAll = findViewById(R.id.bDeleteNotes);
+        bCreateNote = findViewById(R.id.bAddNote);
         registerForContextMenu(lv);
 
 
@@ -67,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
                     view.setBackgroundColor(Color.LTGRAY);
                     bDeleteAll.setVisibility(View.VISIBLE);
                     dbo.checkNote(id1);
-                    System.out.println(view);
                 }else {
                     view.setBackgroundColor(Color.WHITE);
                     if (getCheckedNotesIds().isEmpty()) {
@@ -100,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("noteLog","\nremove note - id: " + listItem.getId()+
                             ", note: "+ listItem + ", list view position: "+ info.position);
                 }catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
         }
         return super.onContextItemSelected(item);
@@ -126,15 +119,15 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    private void getAllContent(){
+    public void getAllContent(){
         try {
             //to remember the position of checked notes
             ArrayList<Integer> checkedField = new ArrayList<>();
             int i = 0;
+            //
 
             Log.d("function","getAllContent" );
             Cursor cur = dbo.getAllData();
@@ -149,17 +142,17 @@ public class MainActivity extends AppCompatActivity {
                 }
                 i++;
             }
-            aa = new ArrayAdapter(this, android.R.layout.select_dialog_multichoice, NoteLists);
+//            aa = new ArrayAdapter(this, android.R.layout.select_dialog_multichoice, NoteLists);
+            aa = new ArrayAdapterCustom(this, android.R.layout.select_dialog_multichoice, NoteLists,checkedField);
             lv.setAdapter(aa);
 
             for (int k = 0; k<checkedField.size(); k++){
                 lv.setItemChecked(checkedField.get(k), true);
                 bDeleteAll.setVisibility(View.VISIBLE);
             }
-
         }catch (Exception e){
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -177,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("noteLog", "qty of checked notes: " + dbIds.size());
             return dbIds;
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             return null;
         }
     }
@@ -196,39 +189,30 @@ public class MainActivity extends AppCompatActivity {
             Log.d("noteLog", "qty of checked notes: " + dbIds.size());
             return dbIds;
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             return null;
         }
     }
-
-//    public ArrayList<Integer> getCheckedNotesPositions() {
-//        try {
-//            ArrayList<Integer> positions = new ArrayList<>();
-//            for (int i = 0; i < noteLists.size(); i++) {
-//                if (lv.isItemChecked(i)) {
-//                    positions.add(i+1);
-//                }
-//            }
-//            return positions;
-//        } catch (Exception e) {
-//            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//            return null;
-//        }
-//    }
-
-    public void onClickDeleteSomeNotes(View view) {
+    
+    public void onClickDeleteCheckedNotes(View view) {
         try {
-            Log.d("function","onClickDeleteSomeNotes" );
+            Log.d("function","onClickDeleteCheckedNotes" );
             ArrayList<Integer> ids;
             ids = getCheckedNotesIds();
             for (int i = 0; i < ids.size(); i++) {
                 dbo.deleteNote(ids.get(i));
                 Log.d("noteLog","\nremove note - id: " + ids.get(i));
             }
+            bDeleteAll.setVisibility(View.INVISIBLE);
             onResume();
         }catch (Exception e){
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void onClickCreateNote(View view) {
+        Intent intent = new Intent(MainActivity.this, NoteActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -243,13 +227,15 @@ public class MainActivity extends AppCompatActivity {
         try {
             getAllContent();
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+
         super.onResume();
     }
 
     @Override
     protected void onPause() {
+        noteLists.clear();
         if(!(getUnCheckedNotesIds() == null)) {
             for (int i = 0; i < getUnCheckedNotesIds().size(); i++) {
                 dbo.uncheckNote(getUnCheckedNotesIds().get(i));

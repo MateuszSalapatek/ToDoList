@@ -13,11 +13,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginHorizontal="@dimen/side_margin">
+
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/eTContentText"
-            android:hint="@string/lNoteContent"/>
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            android:hint="@string/lNoteContent" />
         <CheckBox
             android:id="@+id/cBNotification"
             android:layout_width="wrap_content"
@@ -37,11 +38,13 @@
             android:inputType="number"/>
 
         <Button
+            android:id="@+id/bAddNote"
             android:layout_width="match_parent"
-            android:onClick="addNote"
             android:layout_height="wrap_content"
-            android:text="@string/lAdd"/>
-
+            android:layout_gravity="bottom"
+            android:onClick="addNote"
+            android:background="?attr/colorPrimary"
+            android:text="@string/lAdd"
+            android:textColor="@color/canvas" />
     </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>

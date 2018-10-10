@@ -8,4 +8,6 @@
     <string name="lAdd">Dodaj</string>
     <string name="lPleaseCreateNote">Proszę zapisać notatkę</string>
     <string name="lDeleteNote">usuń notatkę</string>
+    <string name="sFillTheNote">proszę wpisać notatkę</string>
+    <string name="sAddNote">Utwórz notatkę</string>
 </resources>
