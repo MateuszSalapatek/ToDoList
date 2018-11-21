@@ -11,40 +11,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginHorizontal="@dimen/side_margin">
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/eTContentText"
             android:layout_width="match_parent"
-            android:layout_height="112dp"
+            android:gravity="top"
+            android:layout_height="match_parent"
             android:hint="@string/lNoteContent" />
-        <CheckBox
-            android:id="@+id/cBNotification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lSetDateNotification"/>
-        <EditText
-            android:id="@+id/eTDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="podaj datę w formacie DD-MM-RRRR"
-            android:inputType="number" />
-        <EditText
-            android:id="@+id/eTTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="podaj godzinę w formacie HH24-MI-SS"
-            android:inputType="number"/>
 
-        <Button
-            android:id="@+id/bAddNote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:onClick="addNote"
-            android:background="?attr/colorPrimary"
-            android:text="@string/lAdd"
-            android:textColor="@color/canvas" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

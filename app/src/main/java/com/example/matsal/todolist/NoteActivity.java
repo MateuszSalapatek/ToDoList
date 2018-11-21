@@ -21,7 +21,7 @@ import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
 
-    private String path = Environment.getExternalStorageDirectory().toString() + "/ToDo_NoteLists";
+//    private String path = Environment.getExternalStorageDirectory().toString() + "/ToDo_NoteLists";
     private EditText etNoteContent;
     private Button bAddNote;
     DataBaseOwner dbo = new DataBaseOwner(this);
@@ -36,6 +36,9 @@ public class NoteActivity extends AppCompatActivity {
 
         etNoteContent = findViewById(R.id.eTContentText);
         bAddNote = findViewById(R.id.bAddNote);
+
+        String editText= getIntent().getStringExtra("EDIT_TEXT");
+        etNoteContent.setText(editText);
     }
 
     public void addNote(View view) {
@@ -43,8 +46,13 @@ public class NoteActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), R.string.sFillTheNote, Toast.LENGTH_SHORT).show();
             return;
         }
-        dbo.addNote(etNoteContent.getText().toString(),null);
-        Log.d("noteLog", "\ncreate note view - text: " + etNoteContent.getText().toString());
+        if(getIntent().getStringExtra("EDIT_TEXT") == null){
+            Log.d("noteLog", "\ncreate note view - text: " + etNoteContent.getText().toString());
+            dbo.addNote(etNoteContent.getText().toString(),null);
+        }else{
+            Log.d("noteLog", "\nupdate note view - text: " + etNoteContent.getText().toString());
+            dbo.updateNote(etNoteContent.getText().toString(),getIntent().getIntExtra("ID",1));
+        }
         finish();
     }
 }

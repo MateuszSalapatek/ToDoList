@@ -49,6 +49,14 @@ public class DataBaseOwner extends SQLiteOpenHelper {
         db.delete("ToDoList","id=?",arguments);
     }
 
+    public void updateNote (String note, int id){
+        SQLiteDatabase db = getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("note", note);
+        String[] arguments = {""+id};
+        db.update("ToDoList", values, "id=?", arguments);
+    }
+
     public void checkNote(int id){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();

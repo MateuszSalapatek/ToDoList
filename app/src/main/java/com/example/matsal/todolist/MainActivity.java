@@ -1,12 +1,9 @@
 package com.example.matsal.todolist;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.health.SystemHealthManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,10 +12,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -84,17 +79,28 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         Log.d("function","onContextItemSelected" );
         AdapterView.AdapterContextMenuInfo info  = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch(item.getItemId()){
-            case R.id.iDelete:
-                try{
-                    NoteLists listItem = (NoteLists) lv.getItemAtPosition(info.position);
-                    dbo.deleteNote(listItem.getId());
-                    onResume();
-                    Log.d("noteLog","\nremove note - id: " + listItem.getId()+
-                            ", note: "+ listItem + ", list view position: "+ info.position);
-                }catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+        try {
+            if (item.getItemId() == R.id.iDelete) {
+                NoteLists listItem = (NoteLists) lv.getItemAtPosition(info.position);
+                dbo.deleteNote(listItem.getId());
+                onResume();
+                Log.d("noteLog", "\nremove note - id: " + listItem.getId() +
+                        ", note: " + listItem + ", list view position: " + info.position);
+            }else if (item.getItemId() == R.id.iChangeNote) {
+                String note =  lv.getItemAtPosition(info.position).toString();
+                NoteLists listItem = (NoteLists) lv.getItemAtPosition(info.position);
+                Integer id = listItem.getId();
+
+                Intent intent = new Intent(MainActivity.this, NoteActivity.class);
+
+                //to pass additional value for new activity
+                intent.putExtra("EDIT_TEXT", note);
+                intent.putExtra("ID",id);
+                //////////////////////////////////////////
+                startActivity(intent);
+            }
+        }catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return super.onContextItemSelected(item);
     }

@@ -2,12 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group
-        android:checkableBehavior="all">
+    <group>
+        <!--android:checkableBehavior="all">  to add check box!!!!-->
         <item
             android:id="@+id/iDelete"
             android:orderInCategory="100"
             android:title="@string/lDeleteNote"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/iChangeNote"
+            android:orderInCategory="200"
+            android:title="@string/sChangeNote"
             app:showAsAction="never" />
     </group>
 </menu>

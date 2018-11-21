@@ -10,4 +10,5 @@
     <string name="lDeleteNote">usuń notatkę</string>
     <string name="sFillTheNote">proszę wpisać notatkę</string>
     <string name="sAddNote">Utwórz notatkę</string>
+    <string name="sChangeNote">edytuj notatkę</string>
 </resources>
